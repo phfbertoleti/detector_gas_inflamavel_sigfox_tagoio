@@ -1,0 +1,1 @@
+# detector_gas_inflamavel_sigfox_tagoio
