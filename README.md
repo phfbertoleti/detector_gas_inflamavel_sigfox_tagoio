@@ -18,6 +18,11 @@ O projeto utiliza como hardware as seguintes partes:
  
 * Arduino UNO R3 (https://www.filipeflop.com/produto/placa-uno-r3-cabo-usb-para-arduino/)
 * Shield IoT Tatamaya Black
+
+![Shield IoT Tatamaya Black](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/tatamaya_black.jpg)
+
 * SigBOT: Placa de comunicação SigFox
+
+![SigBOT](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/sigbot.jpg)
 
 Para adquirir a Tatamaya Black e a placa SigBOT, entre em contato com Cirineu C. Fernandes pelo e-mail sirineotechnologies.adm@gmail.com ou telefone (62) 8282-7958.
