@@ -25,4 +25,4 @@ O projeto utiliza como hardware as seguintes partes:
 
 ![SigBOT](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/sigbot.jpg)
 
-Para adquirir a Tatamaya Black e a placa SigBOT, entre em contato com Cirineu C. Fernandes pelo e-mail sirineotechnologies.adm@gmail.com ou telefone (62) 8282-7958.
+Para adquirir a Tatamaya Black e a placa SigBOT, entre em contato com Cirineu C. Fernandes pelo e-mail sirineotechnologies.adm@gmail.com ou telefone (61) 99865-4343
