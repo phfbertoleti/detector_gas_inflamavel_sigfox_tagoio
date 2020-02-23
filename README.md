@@ -17,11 +17,13 @@ Será considerado o LED ligado ao GPIO 13 como um breathing light, piscando semp
 O projeto utiliza como hardware as seguintes partes:
  
 * Arduino UNO R3 (https://www.filipeflop.com/produto/placa-uno-r3-cabo-usb-para-arduino/)
-* Shield IoT Tatamaya Black (https://drive.google.com/open?id=1NeoiuorF5YOBlFWUijnuvS51O5rRDkCZ)
+* Shield IoT Tatamaya Black
+https://drive.google.com/open?id=1NeoiuorF5YOBlFWUijnuvS51O5rRDkCZ
 
 ![Shield IoT Tatamaya Black](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/tatamaya_black.jpg)
 
 * SigBOT: Placa de comunicação SigFox
+https://drive.google.com/open?id=1JSp95X5DpOnOEvNmzj24lFs_m5cihKBk
 
 ![SigBOT](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/sigbot.jpg)
 
