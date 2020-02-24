@@ -8,6 +8,7 @@
 
 /* Definições de compilação condicional */
 #define ESCREVE_DEBUG_SERIAL_TEMP
+#define ESCREVE_DEBUG_SERIAL_MQ2
 #define ESCREVE_DEBUG_SERIAL_SIGFOX
 
 /* Definições gerais */
@@ -16,7 +17,7 @@
 #define BAUDRATE_SERIAL_DEBUG                  115200
 #define BAUDRATE_SERIAL_SIGFOX                 9600
 #define GPIO_BREATHING_LIGHT                   13
-#define GPIO_MQ2                               2
+#define GPIO_MQ2                               12
 #define ANALOG_LM35                            A0
 #define SIGFOX_SERIAL_RX_GPIO                  4
 #define SIGFOX_SERIAL_TX_GPIO                  5
@@ -25,6 +26,10 @@
 #define SIGFOX_CMD_NUM_MICRO_MACRO_CANAIS      "AT$GI?\r"
 #define SIGFOX_CMD_RESET_MICRO_MACRO_CANAIS    "AT$RC\r"
 #define SIGFOX_CMD_ENVIO_DE_FRAME              "AT$SF="
+
+/* Definições - máquina de estados do sensor de gás */
+#define ESTADO_SENSOR_AGUARDA_ACIONAR          0x00
+#define ESTADO_SENSOR_AGUARDA_DESACIONAR       0x01
 
 /* Definições de temporização */
 #define TEMPO_BREATHING_LIGHT_ON_OFF  250   //ms
@@ -58,6 +63,7 @@ bool gas_inflamavel_detectado = false;
 unsigned long timestamp_envio_sigfox = 0;
 unsigned long timestamp_breathing_light = 0;
 unsigned long timestamp_leitura_sensores = 0;
+char estado_sensor_gas = ESTADO_SENSOR_AGUARDA_ACIONAR;
 
 /* Protótipos */
 char le_temperatura(void);
@@ -69,7 +75,7 @@ String formata_frame_sigfox(char * ptr_data, uint8_t len);
 void garante_macro_e_micro_canais(void);
 void send_sigfox(char * ptr_data, uint8_t len);
 void formata_e_envia_dados(void);
-void emergencia_gas_inflamavel(void);
+void verifica_sensor_gas(void);
 
 /*
  * Implementações
@@ -289,7 +295,7 @@ char le_mq2(void)
 {
     char leitura = NAO_HA_GASES_INFLAMAVEIS;
     
-    if (digitalRead(GPIO_MQ2) == HIGH)
+    if (digitalRead(GPIO_MQ2) == LOW)
         leitura = HA_GASES_INFLAMAVEIS;
 
     return leitura;  
@@ -323,14 +329,40 @@ void pisca_breathing_light(void)
     digitalWrite(GPIO_BREATHING_LIGHT, estado_breathing_light);
 }
 
-/* Função: função chamada quando é detectado gás inflamável pelo sensor MQ-2 (via interrupção de hardware do tipo rising)
- *         Essa função ativa um flag que forçará o envio de um pacote SigFox
+/* Função: verifica se o sensor de gás inflamável e fumaça está acionado
  * Parâmetros: nenhum
  * Retorno: nenhum
  */
-void emergencia_gas_inflamavel(void)
-{
-    gas_inflamavel_detectado = true;
+void verifica_sensor_gas(void)
+{ 
+    switch (estado_sensor_gas)   
+    {
+        case ESTADO_SENSOR_AGUARDA_ACIONAR:
+            if (le_mq2() == HA_GASES_INFLAMAVEIS)
+            {              
+                estado_sensor_gas = ESTADO_SENSOR_AGUARDA_DESACIONAR;
+                gas_inflamavel_detectado = true;
+
+                #ifdef ESCREVE_DEBUG_SERIAL_MQ2
+                Serial.println("* Gases inflamaveis e/ou fumaca DETECTADOS!");
+                #endif                
+            }
+            break;
+  
+        case ESTADO_SENSOR_AGUARDA_DESACIONAR:
+            if (le_mq2() == NAO_HA_GASES_INFLAMAVEIS)
+            {
+                estado_sensor_gas = ESTADO_SENSOR_AGUARDA_ACIONAR;
+
+                #ifdef ESCREVE_DEBUG_SERIAL_MQ2
+                Serial.println("* Gases inflamaveis e/ou fumaca nao detectados!");
+                #endif            
+            }
+            break; 
+
+       default: 
+           break;     
+    }
 }
 
 void setup() 
@@ -360,10 +392,10 @@ void setup()
         pisca_breathing_light();        
         delay(1000);
     }
-    
-    /* Atribui interrupção externa ao GPIO2 (saída digital do MQ-2) */
-    attachInterrupt(digitalPinToInterrupt(GPIO_MQ2), emergencia_gas_inflamavel, RISING); 
 
+    /* Inicializa máquina de estados do sensor de gás e fumaça */
+    estado_sensor_gas = ESTADO_SENSOR_AGUARDA_ACIONAR;
+    
     /* Inicializa comunicação com módulo Sigfox */
     init_sigfox();
 
@@ -375,6 +407,9 @@ void setup()
 
 void loop() 
 {       
+    /* verifica se sensor de gás e fumaça foi acionado */
+    verifica_sensor_gas();
+
     /* Verifica se é a hora de piscar o breathing light */     
     if (diferenca_tempo(timestamp_breathing_light) >= TEMPO_BREATHING_LIGHT_ON_OFF)
     {
