@@ -71,7 +71,7 @@ char le_mq2(void);
 void pisca_breathing_light(void);
 unsigned long diferenca_tempo(unsigned long timestamp_referencia);
 void init_sigfox(void);
-String formata_frame_sigfox(char * ptr_data, uint8_t len);
+String formata_frame_sigfox(unsigned char * ptr_data, uint8_t len);
 void garante_macro_e_micro_canais(void);
 void send_sigfox(char * ptr_data, uint8_t len);
 void formata_e_envia_dados(void);
@@ -116,7 +116,7 @@ void init_sigfox(void)
  * Parâmetros: ponteiro para array de dados e tamanho do array
  * Retorno: frame formatado (String)
  */
-String formata_frame_sigfox(char * ptr_data, uint8_t len)
+String formata_frame_sigfox(unsigned char * ptr_data, uint8_t len)
 {
     String frame_sigfox = "";  
     uint8_t i;
