@@ -21,6 +21,7 @@ O projeto utiliza como hardware as seguintes partes:
 
 * Shield IoT Tatamaya Black
 https://drive.google.com/open?id=1NeoiuorF5YOBlFWUijnuvS51O5rRDkCZ
+https://engebotadm.wixsite.com/totaleng/post/blogujte-ze-sv%C3%A9ho-zve%C5%99ejn%C4%9Bn%C3%A9ho-webu-a-z-mobilu
 
 ![Shield IoT Tatamaya Black](https://github.com/phfbertoleti/detector_gas_inflamavel_sigfox_tagoio/blob/master/hardware_imagens/tatamaya_black.jpg)
 
